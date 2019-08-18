@@ -16,7 +16,7 @@
 namespace GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple
 {
     using GadrocsWorkshop.Helios.ComponentModel;
-    //using GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple.Functions;
+    using GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple.Functions;
     using GadrocsWorkshop.Helios.Interfaces.DCS.Common;
     using GadrocsWorkshop.Helios.UDPInterface;
     using Microsoft.Win32;
@@ -63,6 +63,19 @@ namespace GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple
         private const string DDM_IND = "28";
         private const string WEAPONS_CONTROL = "29";
         #endregion
+        #region Buttons
+        private const string CMD = "3";
+        private const string UVHF_CHANNEL = "445";
+        private const string VORILS_FREQUENCY_CHANGE_WHOLE = "617";
+        private const string VORILS_FREQUENCY_CHANGE_DECIMAL = "618";
+        private const string VORILS_POWER = "617";
+        private const string TACAN_C10_SELECTOR = "623";
+        private const string TACAN_XY_SELECTOR = "624";
+        private const string TACAN_C1_SELECTOR = "625";
+        private const string TACAN_MODE_SELECTOR = "626";
+        private const string CANOPY_LOCK = "907";
+        #endregion
+
         public M2000CSimpleInterface()
             : base("DCS Mirage-2000C (Simple)")
         {
@@ -258,6 +271,24 @@ namespace GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple
             //AddFunction(new FlagValue(this, "2036", "Indicators", "Indicators 2036", "Mode VOR ILS"));
             //AddFunction(new FlagValue(this, "2037", "Indicators", "Indicators 2037", "Mode TACAN"));
             #endregion
+//            AddFunction(new TestValues(this));
+            #region Cockpit
+            AddFunction(new PushButton(this, MISCPANELS, CANOPY_LOCK, CMD+ CANOPY_LOCK, "CANOPY", "Canopy lock"));
+            #endregion
+/*
+             #region TACAN Control Panel
+//            AddFunction(new RotaryEncoder(this, TACAN, TACAN_C10_SELECTOR, CMD + TACAN_C10_SELECTOR, 0.0769237d, "TACAN", "Channel 10 Selector"));
+            AddFunction(new Switch(this, TACAN, TACAN_XY_SELECTOR, new SwitchPosition[] { new SwitchPosition("0.0", "X", CMD + TACAN_XY_SELECTOR), new SwitchPosition("1.0", "Y", CMD + TACAN_XY_SELECTOR) }, "TACAN", "X/Y Select", "%0.1f"));
+//            AddFunction(new RotaryEncoder(this, TACAN, TACAN_C1_SELECTOR, CMD + TACAN_C1_SELECTOR, 0.1, "TACAN", "TACAN Channel 1 Selector"));
+            AddFunction(new Switch(this, TACAN, TACAN_MODE_SELECTOR, new SwitchPosition[] { new SwitchPosition("0.0", "OFF", CMD + TACAN_MODE_SELECTOR), new SwitchPosition("0.3", "REC", CMD + TACAN_MODE_SELECTOR), new SwitchPosition("0.7", "T/R", CMD + TACAN_MODE_SELECTOR), new SwitchPosition("1.0", "A/A Receive", CMD + TACAN_MODE_SELECTOR) }, "TACAN", "Mode Select", " %0.2f"));
+            AddFunction(new TACANChannel(this));
+            #endregion
+            #region VOR.ILS Control Panel
+            AddFunction(new RotaryEncoder(this, VORILS, VORILS_FREQUENCY_CHANGE_WHOLE, CMD + VORILS_FREQUENCY_CHANGE_WHOLE, 0.09, "VOR/ILS", "VOR/ILS Frequency Change whole"));
+            AddFunction(new RotaryEncoder(this, VORILS, VORILS_FREQUENCY_CHANGE_DECIMAL, CMD + VORILS_FREQUENCY_CHANGE_DECIMAL, 0.05, "VOR/ILS", "VOR/ILS Frequency Change Decimal"));
+            AddFunction(new Switch(this, VORILS, VORILS_POWER, new SwitchPosition[] { new SwitchPosition("0.0", "On", CMD + VORILS_POWER), new SwitchPosition("1.0", "Off", CMD + VORILS_POWER) }, "VOR/ILS", "VOR/ILS Power Dial", "%0.1f"));
+  //          AddFunction(new ILSFrequency(this));
+            #endregion */
             #region  Landing Gear
             //AddFunction(Switch.CreateToggleSwitch(this, INSTPANEL, "3404", "404", "Landing Gear", "Landing Gear Lever", "%0.1f"));    // elements["PTN_404"] = default_animated_lever(_("Landing Gear Lever"), devices.INSTPANEL, device_commands.Button_404, 404,5.0)
             //AddFunction(Switch.CreateToggleSwitch(this, INSTPANEL, "3408", "408", "Landing Gear", "Landing Gear Emergency Release Lever", "%0.1f"));    // elements["PTN_408"] = default_animated_lever(_("Landing Gear Emergency Release Lever"), devices.INSTPANEL, device_commands.Button_408, 408, 5.0)
@@ -265,33 +296,33 @@ namespace GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple
             #endregion
             #region  HUD/VTB"
             AddFunction(new Switch(this, VTH_VTB, "201", new SwitchPosition[] { }, "HUD/VTB", "HUD Power Switch", "%0.1f"));    // elements["PTN_201"] = multiposition_switch_limited(_("HUD Power Switch"), devices.VTH_VTB, device_commands.Button_201, 201, 3, 0.5, false, 0)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3203", "203", "HUD/VTB", "HUD Declutter Switch", "%0.1f"));    // elements["PTN_203"] = default_2_way_spring_switch(_("HUD Declutter Switch"), devices.VTH_VTB, device_commands.Button_203, 203, true)
-            AddFunction(new Switch(this, VTH_VTB, "204", new SwitchPosition[] { }, "HUD/VTB", "HUD Altimeter Selector Switch", "%0.1f"));    // elements["PTN_204"] = multiposition_switch_limited(_("HUD Altimeter Selector Switch"), devices.VTH_VTB, device_commands.Button_204, 204, 3, 0.5, true, 0)
-            AddFunction(new Switch(this, VTH_VTB, "205", new SwitchPosition[] { }, "HUD/VTB", "Radar Altimeter Power Switch", "%0.1f"));    // elements["PTN_205"] = multiposition_switch_limited(_("Radar Altimeter Power Switch"), devices.VTH_VTB, device_commands.Button_205, 205, 3, 0.5, false, 0)
-            AddFunction(new PushButton(this, VTH_VTB, "3206", "206", "HUD/VTB", "Auxiliary Gunsight"));    // elements["PTN_206"] = default_2_position_tumb(_("Auxiliary Gunsight"), devices.VTH_VTB, device_commands.Button_206, 206)
-            AddFunction(new Axis(this, VTH_VTB, "3207", "207", 0.15d, 0d, 1d, "HUD/VTB", "Auxiliary Gunsight Deflection"));    // elements["PTN_207"] = default_axis_cycle(_("Auxiliary Gunsight Deflection"), devices.VTH_VTB, device_commands.Button_207, 207, 0, 0.01, true, 0)
-            AddFunction(new PushButton(this, VTH_VTB, "3208", "208", "HUD/VTB", "A/G Gun Reticle Switch"));    // elements["PTN_208"] = default_2_position_tumb(_("A/G Gun Reticle Switch"), devices.VTH_VTB, device_commands.Button_208, 208)
-            AddFunction(new Axis(this, VTH_VTB, "3209", "209", 0.15d, 0d, 1d, "HUD/VTB", "Target Wingspan Knob"));    // elements["PTN_209"] = default_axis_limited(_("Target Wingspan Knob"), devices.VTH_VTB, device_commands.Button_209, 209, 0, -0.03, true, 0, 99)
-            AddFunction(new PushButton(this, VTH_VTB, "3210", "210", "HUD/VTB", "HUD Clear Button"));    // elements["PTN_210"] = default_button(_("HUD Clear Button"), devices.VTH_VTB, device_commands.Button_210, 210, 0, 1)
-            AddFunction(new Axis(this, VTH_VTB, "3192", "192", 0.15d, 0d, 1d, "HUD/VTB", "Minimum Altitude Selector"));    // elements["PTN_192"] = default_axis(_("Minimum Altitude Selector"), devices.VTH_VTB, device_commands.Button_192, 192, 0, 0.2, true, 0)
-            AddFunction(new PushButton(this, VTH_VTB, "3470", "470", "HUD/VTB", "Radar WOW Emitter Authorize Switch"));    // elements["PTN_470"] = default_2_position_tumb(_("Radar WOW Emitter Authorize Switch"), devices.VTH_VTB, device_commands.Button_470, 470)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3213", "213", "HUD/VTB", "Target Data Manual Entry Begin/End", "%0.1f"));    // elements["PTN_213"] = default_2_way_spring_switch(_("Target Data Manual Entry Begin/End"), devices.VTH_VTB, device_commands.Button_213, 213, true)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3214", "214", "HUD/VTB", "Bullseye Waypoint Selector", "%0.1f"));    // elements["PTN_214"] = default_2_way_spring_switch(_("Bullseye Waypoint Selector"), devices.VTH_VTB, device_commands.Button_214, 214, true)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3215", "215", "HUD/VTB", "Target Range from Bullseye", "%0.1f"));    // elements["PTN_215"] = default_2_way_spring_switch(_("Target Range from Bullseye"), devices.VTH_VTB, device_commands.Button_215, 215, true)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3216", "216", "HUD/VTB", "Target Bearing from Bullseye", "%0.1f"));    // elements["PTN_216"] = default_2_way_spring_switch(_("Target Bearing from Bullseye"), devices.VTH_VTB, device_commands.Button_216, 216, true)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3217", "217", "HUD/VTB", "Target Heading", "%0.1f"));    // elements["PTN_217"] = default_2_way_spring_switch(_("Target Heading"), devices.VTH_VTB, device_commands.Button_217, 217, true)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3218", "218", "HUD/VTB", "Target Altitude", "%0.1f"));    // elements["PTN_218"] = default_2_way_spring_switch(_("Target Altitude"), devices.VTH_VTB, device_commands.Button_218, 218, true)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3219", "219", "HUD/VTB", "Target Mach Number", "%0.1f"));    // elements["PTN_219"] = default_2_way_spring_switch(_("Target Mach Number"), devices.VTH_VTB, device_commands.Button_219, 219, true)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3220", "220", "HUD/VTB", "Target Age", "%0.1f"));    // elements["PTN_220"] = default_2_way_spring_switch(_("Target Age"), devices.VTH_VTB, device_commands.Button_220, 220, true)
-            AddFunction(new PushButton(this, VTH_VTB, "3221", "221", "HUD/VTB", "VTB Power Switch"));    // elements["PTN_221"] = default_2_position_tumb(_("VTB Power Switch"), devices.VTH_VTB, device_commands.Button_221, 221)
-            //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3222", "222", "HUD/VTB", "VTB Declutter", "%0.1f"));    // elements["PTN_222"] = default_2_way_spring_switch(_("VTB Declutter"), devices.VTH_VTB, device_commands.Button_222, 222, true)
-            AddFunction(new PushButton(this, VTH_VTB, "3223", "223", "HUD/VTB", "VTB Orientation Selector (Inop)"));    // elements["PTN_223"] = default_2_position_tumb(_("VTB Orientation Selector (Inop)"), devices.VTH_VTB, device_commands.Button_223, 223)
-            AddFunction(new Switch(this, VTH_VTB, "224", new SwitchPosition[] { }, "HUD/VTB", "Icons and Rulers Brightness", "%0.1f"));    // elements["PTN_224"] = multiposition_switch_limited(_("Icons and Rulers Brightness"), devices.VTH_VTB, device_commands.Button_224, 224, 8, 0.1, false, 0)
-            AddFunction(new Switch(this, VTH_VTB, "225", new SwitchPosition[] { }, "HUD/VTB", "Video Brightness", "%0.1f"));    // elements["PTN_225"] = multiposition_switch_limited(_("Video Brightness"), devices.VTH_VTB, device_commands.Button_225, 225, 8, 0.1, false, 0)
-            AddFunction(new Switch(this, VTH_VTB, "226", new SwitchPosition[] { }, "HUD/VTB", "Display Contrast", "%0.1f"));    // elements["PTN_226"] = multiposition_switch_limited(_("Display Contrast"), devices.VTH_VTB, device_commands.Button_226, 226, 8, 0.1, false, 0)
-            AddFunction(new Switch(this, VTH_VTB, "227", new SwitchPosition[] { }, "HUD/VTB", "Display Brightness", "%0.1f"));    // elements["PTN_227"] = multiposition_switch_limited(_("Display Brightness"), devices.VTH_VTB, device_commands.Button_227, 227, 8, 0.1, false, 0)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3203", "203", "HUD/VTB", "HUD Declutter Switch", "%0.1f"));    // elements["PTN_203"] = default_2_way_spring_switch(_("HUD Declutter Switch"), devices.VTH_VTB, device_commands.Button_203, 203, true)
+                AddFunction(new Switch(this, VTH_VTB, "204", new SwitchPosition[] { }, "HUD/VTB", "HUD Altimeter Selector Switch", "%0.1f"));    // elements["PTN_204"] = multiposition_switch_limited(_("HUD Altimeter Selector Switch"), devices.VTH_VTB, device_commands.Button_204, 204, 3, 0.5, true, 0)
+                AddFunction(new Switch(this, VTH_VTB, "205", new SwitchPosition[] { }, "HUD/VTB", "Radar Altimeter Power Switch", "%0.1f"));    // elements["PTN_205"] = multiposition_switch_limited(_("Radar Altimeter Power Switch"), devices.VTH_VTB, device_commands.Button_205, 205, 3, 0.5, false, 0)
+                AddFunction(new PushButton(this, VTH_VTB, "3206", "206", "HUD/VTB", "Auxiliary Gunsight"));    // elements["PTN_206"] = default_2_position_tumb(_("Auxiliary Gunsight"), devices.VTH_VTB, device_commands.Button_206, 206)
+                AddFunction(new Axis(this, VTH_VTB, "3207", "207", 0.15d, 0d, 1d, "HUD/VTB", "Auxiliary Gunsight Deflection"));    // elements["PTN_207"] = default_axis_cycle(_("Auxiliary Gunsight Deflection"), devices.VTH_VTB, device_commands.Button_207, 207, 0, 0.01, true, 0)
+                AddFunction(new PushButton(this, VTH_VTB, "3208", "208", "HUD/VTB", "A/G Gun Reticle Switch"));    // elements["PTN_208"] = default_2_position_tumb(_("A/G Gun Reticle Switch"), devices.VTH_VTB, device_commands.Button_208, 208)
+                AddFunction(new Axis(this, VTH_VTB, "3209", "209", 0.15d, 0d, 1d, "HUD/VTB", "Target Wingspan Knob"));    // elements["PTN_209"] = default_axis_limited(_("Target Wingspan Knob"), devices.VTH_VTB, device_commands.Button_209, 209, 0, -0.03, true, 0, 99)
+                AddFunction(new PushButton(this, VTH_VTB, "3210", "210", "HUD/VTB", "HUD Clear Button"));    // elements["PTN_210"] = default_button(_("HUD Clear Button"), devices.VTH_VTB, device_commands.Button_210, 210, 0, 1)
+                AddFunction(new Axis(this, VTH_VTB, "3192", "192", 0.15d, 0d, 1d, "HUD/VTB", "Minimum Altitude Selector"));    // elements["PTN_192"] = default_axis(_("Minimum Altitude Selector"), devices.VTH_VTB, device_commands.Button_192, 192, 0, 0.2, true, 0)
+                AddFunction(new PushButton(this, VTH_VTB, "3470", "470", "HUD/VTB", "Radar WOW Emitter Authorize Switch"));    // elements["PTN_470"] = default_2_position_tumb(_("Radar WOW Emitter Authorize Switch"), devices.VTH_VTB, device_commands.Button_470, 470)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3213", "213", "HUD/VTB", "Target Data Manual Entry Begin/End", "%0.1f"));    // elements["PTN_213"] = default_2_way_spring_switch(_("Target Data Manual Entry Begin/End"), devices.VTH_VTB, device_commands.Button_213, 213, true)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3214", "214", "HUD/VTB", "Bullseye Waypoint Selector", "%0.1f"));    // elements["PTN_214"] = default_2_way_spring_switch(_("Bullseye Waypoint Selector"), devices.VTH_VTB, device_commands.Button_214, 214, true)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3215", "215", "HUD/VTB", "Target Range from Bullseye", "%0.1f"));    // elements["PTN_215"] = default_2_way_spring_switch(_("Target Range from Bullseye"), devices.VTH_VTB, device_commands.Button_215, 215, true)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3216", "216", "HUD/VTB", "Target Bearing from Bullseye", "%0.1f"));    // elements["PTN_216"] = default_2_way_spring_switch(_("Target Bearing from Bullseye"), devices.VTH_VTB, device_commands.Button_216, 216, true)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3217", "217", "HUD/VTB", "Target Heading", "%0.1f"));    // elements["PTN_217"] = default_2_way_spring_switch(_("Target Heading"), devices.VTH_VTB, device_commands.Button_217, 217, true)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3218", "218", "HUD/VTB", "Target Altitude", "%0.1f"));    // elements["PTN_218"] = default_2_way_spring_switch(_("Target Altitude"), devices.VTH_VTB, device_commands.Button_218, 218, true)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3219", "219", "HUD/VTB", "Target Mach Number", "%0.1f"));    // elements["PTN_219"] = default_2_way_spring_switch(_("Target Mach Number"), devices.VTH_VTB, device_commands.Button_219, 219, true)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3220", "220", "HUD/VTB", "Target Age", "%0.1f"));    // elements["PTN_220"] = default_2_way_spring_switch(_("Target Age"), devices.VTH_VTB, device_commands.Button_220, 220, true)
+                AddFunction(new PushButton(this, VTH_VTB, "3221", "221", "HUD/VTB", "VTB Power Switch"));    // elements["PTN_221"] = default_2_position_tumb(_("VTB Power Switch"), devices.VTH_VTB, device_commands.Button_221, 221)
+                //AddFunction(Switch.CreateToggleSwitch(this, VTH_VTB, "3222", "222", "HUD/VTB", "VTB Declutter", "%0.1f"));    // elements["PTN_222"] = default_2_way_spring_switch(_("VTB Declutter"), devices.VTH_VTB, device_commands.Button_222, 222, true)
+                AddFunction(new PushButton(this, VTH_VTB, "3223", "223", "HUD/VTB", "VTB Orientation Selector (Inop)"));    // elements["PTN_223"] = default_2_position_tumb(_("VTB Orientation Selector (Inop)"), devices.VTH_VTB, device_commands.Button_223, 223)
+                AddFunction(new Switch(this, VTH_VTB, "224", new SwitchPosition[] { }, "HUD/VTB", "Icons and Rulers Brightness", "%0.1f"));    // elements["PTN_224"] = multiposition_switch_limited(_("Icons and Rulers Brightness"), devices.VTH_VTB, device_commands.Button_224, 224, 8, 0.1, false, 0)
+                AddFunction(new Switch(this, VTH_VTB, "225", new SwitchPosition[] { }, "HUD/VTB", "Video Brightness", "%0.1f"));    // elements["PTN_225"] = multiposition_switch_limited(_("Video Brightness"), devices.VTH_VTB, device_commands.Button_225, 225, 8, 0.1, false, 0)
+                AddFunction(new Switch(this, VTH_VTB, "226", new SwitchPosition[] { }, "HUD/VTB", "Display Contrast", "%0.1f"));    // elements["PTN_226"] = multiposition_switch_limited(_("Display Contrast"), devices.VTH_VTB, device_commands.Button_226, 226, 8, 0.1, false, 0)
+                AddFunction(new Switch(this, VTH_VTB, "227", new SwitchPosition[] { }, "HUD/VTB", "Display Brightness", "%0.1f"));    // elements["PTN_227"] = multiposition_switch_limited(_("Display Brightness"), devices.VTH_VTB, device_commands.Button_227, 227, 8, 0.1, false, 0)
 
-            #endregion
+                #endregion
             #region  PCA/PPA
             AddFunction(new PushButton(this, PCA_PPA, "3463", "463", "PCA/PPA", "Gun Arm/Safe Switch"));    // elements["PTN_463"] = default_2_position_tumb(_("Gun Arm/Safe Switch"), devices.PCA_PPA, device_commands.Button_463, 463)
             AddFunction(new PushButton(this, PCA_PPA, "3234", "234", "PCA/PPA", "Master Arm Switch"));    // elements["PTN_234"] = default_2_position_tumb(_("Master Arm Switch"), devices.PCA_PPA, device_commands.Button_234, 234)
@@ -354,9 +385,13 @@ namespace GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple
 
             #endregion
             #region  HSI
-            AddFunction(new Axis(this, NAVINST, "3340", "340", 0.15d, 0d, 1d, "HSI", "HSI VAD Selector"));    // elements["PTN_340"] = default_axis_cycle(_("HSI VAD Selector"),devices.NAVINST, device_commands.Button_340, 340)
-            AddFunction(new Switch(this, NAVINST, "341", new SwitchPosition[] { }, "HSI", "HSI Mode Selector Switch", "%0.1f"));    // elements["PTN_341"] = multiposition_switch_limited(_("HSI Mode Selector Switch"), devices.NAVINST, device_commands.Button_341, 341, 7, 0.1, false, 0)
-                                                                                                                                    // 
+            //            AddFunction(new Axis(this, NAVINST, "3340", "340", 0.15d, 0d, 1d, "HSI", "HSI VAD Selector"));    // elements["PTN_340"] = default_axis_cycle(_("HSI VAD Selector"),devices.NAVINST, device_commands.Button_340, 340)
+            //            AddFunction(new Switch(this, NAVINST, "341", new SwitchPosition[] { }, "HSI", "HSI Mode Selector Switch", "%0.1f"));    // elements["PTN_341"] = multiposition_switch_limited(_("HSI Mode Selector Switch"), devices.NAVINST, device_commands.Button_341, 341, 7, 0.1, false, 0)
+            //            AddFunction(new ScaledNetworkValue(this, "334", 360d, "HSI", "Desired Course", "Direction of desired course relative to the current heading.", "Rotation realtive to current heading towards the desired course.", BindingValueUnits.Degrees));
+            //            AddFunction(new ScaledNetworkValue(this, "34", -360d, "HSI", "HSI Heading", "Current heading displayed on the HSI", "", BindingValueUnits.Degrees, 360d, "%.4f"));
+//            AddFunction(new ScaledNetworkValue(this, "334", 360d, "HSI", "Bearing 1", "Direction of currently selected TACAN station or the selected UHF station relative to current heading.", "When both TACAN and ADF are selected ADF UHF station will take priority.  If neither mod is selected will align to current steer point.  Direction is realative to current heading.", BindingValueUnits.Degrees));
+//            AddFunction(new ScaledNetworkValue(this, "342", 360d, "HSI", "Compass", "Compass.", "Actual direction of the aircraft.", BindingValueUnits.Degrees));
+//            AddFunction(new HSIMiles(this));
             #endregion
             #region  PELLES, SOURIES AND BECS
             AddFunction(new PushButton(this, ENGINE, "3460", "460", "PELLES, SOURIES AND BECS", "Intake Slats Operation Switch"));    // elements["PTN_460"] = default_2_position_tumb(_("Intake Slats Operation Switch"), devices.ENGINE, device_commands.Button_460, 460)
@@ -494,6 +529,7 @@ namespace GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple
             AddFunction(new Switch(this, INSTPANEL, "361", new SwitchPosition[] { }, "Fuel Panel", "Bingo Fuel 100 kg Selector", "%0.1f"));    // elements["PTN_361"] = default_multiposition_knob(_("Bingo Fuel 100 kg Selector"), devices.INSTPANEL, device_commands.Button_361, 361,  10, 0.1, false, 0)
             AddFunction(new PushButton(this, INSTPANEL, "3357", "357", "Fuel Panel", "Fuel Crossfeeed Switch"));    // elements["PTN_357"] = default_2_position_tumb(_("Fuel Crossfeeed Switch"), devices.INSTPANEL, device_commands.Button_357, 357)
             #endregion  
+            /*
             #region  Radio Panel
             AddFunction(new PushButton(this, UHF, "3429", "429", "Radio Panel", "UHF Power 5W/25W Switch"));    // elements["PTN_429"] = default_2_position_tumb(_("UHF Power 5W/25W Switch"), devices.UHF, device_commands.Button_429, 429)
             AddFunction(new PushButton(this, UHF, "3430", "430", "Radio Panel", "UHF SIL Switch"));    // elements["PTN_430"] = default_2_position_tumb(_("UHF SIL Switch"), devices.UHF, device_commands.Button_430, 430)
@@ -510,11 +546,22 @@ namespace GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple
             AddFunction(new Switch(this, UVHF, "442", new SwitchPosition[] { }, "Radio Panel", "U/VHF 1 MHz Selector", "%0.1f"));    // elements["PTN_442"] = default_multiposition_knob(_("U/VHF 1 MHz Selector"), devices.UVHF, device_commands.Button_442, 442, 10, 0.1, false, 0)
             AddFunction(new Switch(this, UVHF, "443", new SwitchPosition[] { }, "Radio Panel", "U/VHF 100 KHz Selector", "%0.1f"));    // elements["PTN_443"] = default_multiposition_knob(_("U/VHF 100 KHz Selector"), devices.UVHF, device_commands.Button_443, 443, 10, 0.1, false, 0)
             AddFunction(new Switch(this, UVHF, "444", new SwitchPosition[] { }, "Radio Panel", "U/VHF 25 KHz Selector", "%0.1f"));    // elements["PTN_444"] = default_multiposition_knob(_("U/VHF 25 KHz Selector"), devices.UVHF, device_commands.Button_444, 444, 4, 0.25, false, 0)
-            AddFunction(new Switch(this, UVHF, "445", new SwitchPosition[] { }, "Radio Panel", "U/VHF Knob", "%0.1f"));    // elements["PTN_445"] = default_multiposition_knob(_("U/VHF Knob"), devices.UVHF, device_commands.Button_445, 445, 20, 0.05,false,0.05)
-            AddFunction(new Switch(this, UVHF, "446", new SwitchPosition[] { }, "Radio Panel", "U/VHF Mode Switch 1", "%0.1f"));    // elements["PTN_446"] = multiposition_switch_limited(_("U/VHF Mode Switch 1"), devices.UVHF, device_commands.Button_446, 446, 5, 0.25, false, 0)
+            */
+/*            AddFunction(new Switch(this, UVHF, UVHF_CHANNEL, new SwitchPosition[] { 
+                new SwitchPosition("0.05", "Channel 1", CMD+UVHF_CHANNEL), new SwitchPosition("0.1", "Channel 2", CMD+UVHF_CHANNEL), new SwitchPosition("0.15", "Channel 3", CMD+UVHF_CHANNEL),
+                new SwitchPosition("0.2", "Channel 4", CMD+UVHF_CHANNEL), new SwitchPosition("0.25", "Channel 5", CMD+UVHF_CHANNEL), new SwitchPosition("0.3", "Channel 6", CMD+UVHF_CHANNEL),
+                new SwitchPosition("0.35", "Channel 7", CMD+UVHF_CHANNEL), new SwitchPosition("0.4", "Channel 8", CMD+UVHF_CHANNEL) , new SwitchPosition("0.45", "Channel 9", CMD+UVHF_CHANNEL),
+                new SwitchPosition("0.5", "Channel 10", CMD+UVHF_CHANNEL), new SwitchPosition("0.55", "Channel 11", CMD+UVHF_CHANNEL) , new SwitchPosition("0.66", "Channel 12", CMD+UVHF_CHANNEL),
+                new SwitchPosition("0.65", "Channel 13", CMD+UVHF_CHANNEL), new SwitchPosition("0.7", "Channel 14", CMD+UVHF_CHANNEL) , new SwitchPosition("0.75", "Channel 15", CMD+UVHF_CHANNEL),
+                new SwitchPosition("0.8", "Channel 16", CMD+UVHF_CHANNEL), new SwitchPosition("0.85", "Channel 17", CMD+UVHF_CHANNEL) , new SwitchPosition("0.9", "Channel 18", CMD+UVHF_CHANNEL),
+                new SwitchPosition("0.95", "Channel 19", CMD+UVHF_CHANNEL), new SwitchPosition("1", "Channel 20", CMD+UVHF_CHANNEL)}, "Radio Panel", "U/VHF Channel Selector", "%0.2f"));
+  */ /*         AddFunction(new Switch(this, UVHF, "446", new SwitchPosition[] { }, "Radio Panel", "U/VHF Mode Switch 1", "%0.1f"));    // elements["PTN_446"] = multiposition_switch_limited(_("U/VHF Mode Switch 1"), devices.UVHF, device_commands.Button_446, 446, 5, 0.25, false, 0)
             AddFunction(new PushButton(this, UVHF, "3447", "447", "Radio Panel", "U/VHF Power 5W/25W Switch"));    // elements["PTN_447"] = default_2_position_tumb(_("U/VHF Power 5W/25W Switch"), devices.UVHF, device_commands.Button_447, 447)
             AddFunction(new Switch(this, UVHF, "448", new SwitchPosition[] { }, "Radio Panel", "U/VHF Manual/Preset Mode Selector", "%0.1f"));    // elements["PTN_448"] = multiposition_switch_limited(_("U/VHF Manual/Preset Mode Selector"), devices.UVHF, device_commands.Button_448, 448, 3, 0.50, false, 0)
-            #endregion  
+//            AddFunction(new UVHFPresetChannel(this));
+            #endregion
+            */
+
             #region  Right MDI
             #endregion
             #region  Navigational Antennas
@@ -522,11 +569,14 @@ namespace GadrocsWorkshop.Helios.Interfaces.DCS.M2000CSimple
             AddFunction(new PushButton(this, VORILS, "3617", "617", "Navigational Antennas", "VOR/ILS Power Dial"));    // elements["PTN_617"] = default_2_position_tumb(_("VOR/ILS Power Dial"), devices.VORILS,device_commands.Button_617,617)
             AddFunction(new Switch(this, VORILS, "618", new SwitchPosition[] { }, "Navigational Antennas", "VOR/ILS Frequency Change Decimal", "%0.1f"));    // elements["PTN_618"] = default_multiposition_knob(_("VOR/ILS Frequency Change Decimal"),devices.VORILS,device_commands.Button_618,618, 20, 0.05,false,0.0)
             AddFunction(new PushButton(this, VORILS, "3619", "619", "Navigational Antennas", "VOR/ILS Test Dial"));    // elements["PTN_619"] = default_2_position_tumb(_("VOR/ILS Test Dial"), devices.VORILS,device_commands.Button_619,619)
-            AddFunction(new Switch(this, TACAN, "623", new SwitchPosition[] { }, "Navigational Antennas", "TACAN Channel 10 Selector", "%0.1f"));    // elements["PTN_623"] = default_multiposition_knob(_("TACAN Channel 10 Selector"),devices.TACAN,device_commands.Button_623,623, 13, 0.076923, false, 0.0)
-            AddFunction(new PushButton(this, TACAN, "3624", "624", "Navigational Antennas", "TACAN X/Y Select"));    // elements["PTN_624"] = default_2_position_tumb(_("TACAN X/Y Select"),devices.TACAN,device_commands.Button_624,624)
-            AddFunction(new Switch(this, TACAN, "625", new SwitchPosition[] { }, "Navigational Antennas", "TACAN Channel 1 Selector", "%0.1f"));    // elements["PTN_625"] = default_multiposition_knob(_("TACAN Channel 1 Selector"),devices.TACAN,device_commands.Button_625,625, 10, 0.1, false, 0)
-            AddFunction(new Switch(this, TACAN, "626", new SwitchPosition[] { }, "Navigational Antennas", "TACAN Mode Select", "%0.1f"));    // elements["PTN_626"] = multiposition_switch_limited(_("TACAN Mode Select"), devices.TACAN, device_commands.Button_626, 626, 4, 0.33, false, 0)
-            #endregion  
+//            AddFunction(new Switch(this, TACAN, "623", new SwitchPosition[] { }, "Navigational Antennas", "Channel 10 Selector", "%0.5f"));    // elements["PTN_623"] = default_multiposition_knob(_("TACAN Channel 10 Selector"),devices.TACAN,device_commands.Button_623,623, 13, 0.076923, false, 0.0)
+//            AddFunction(new Axis(this, TACAN, TACAN_C10_SELECTOR, TACAN_C10_SELECTOR, 0.0769237d, 0.0d, 0.923077d, "TACAN", "Channel 10 Selector", false, "%.7f"));  // elements["PTN_702"] = default_axis_limited(_("TACAN Volume Knob"), devices.SYSLIGHTS, device_commands.Button_702, 702, 0.8, 0.5, true, false, {0.0, 1.0})
+
+            /*            AddFunction(new PushButton(this, TACAN, "3624", "624", "Navigational Antennas", "TACAN X/Y Select"));    // elements["PTN_624"] = default_2_position_tumb(_("TACAN X/Y Select"),devices.TACAN,device_commands.Button_624,624)
+                        AddFunction(new Switch(this, TACAN, "625", new SwitchPosition[] { }, "Navigational Antennas", "TACAN Channel 1 Selector", "%0.1f"));    // elements["PTN_625"] = default_multiposition_knob(_("TACAN Channel 1 Selector"),devices.TACAN,device_commands.Button_625,625, 10, 0.1, false, 0)
+                        AddFunction(new Switch(this, TACAN, "626", new SwitchPosition[] { }, "Navigational Antennas", "TACAN Mode Select", "%0.1f"));    // elements["PTN_626"] = multiposition_switch_limited(_("TACAN Mode Select"), devices.TACAN, device_commands.Button_626, 626, 4, 0.33, false, 0)
+            */
+            #endregion
             #region  Miscellaneous Left Panel
             AddFunction(new PushButton(this, MISCPANELS, "3400", "400", "Miscellaneous Left Panel", "Cockpit Clock"));    // elements["PTN_400"] = default_2_position_tumb(_("Cockpit Clock"), devices.MISCPANELS, device_commands.Button_400, 400)
             AddFunction(new PushButton(this, SYSLIGHTS, "", "191", "Miscellaneous Left Panel", "Audio Warning Reset"));    // elements["PTN_191"] = default_button(_("Audio Warning Reset"), devices.SYSLIGHTS, Keys.PlaneResetMasterWarning, 191, 0, 1)

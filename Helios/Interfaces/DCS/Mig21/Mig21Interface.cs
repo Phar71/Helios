@@ -406,7 +406,7 @@ namespace GadrocsWorkshop.Helios.Interfaces.DCS.MiG21
                 new SwitchPosition("0.95", "Channel 19", RADIO_CHANNEL), new SwitchPosition("1", "Channel 20", RADIO_CHANNEL)}, "Radio", "Radio Channel Selector", "%0.1f"));
             AddFunction(new PushButton(this, INTERCOM, RADIO_INTERCOM, "315", "Radio", "Intercom pushbutton"));
             // potentiometer with initial 0, min0, max 20, step 1 works perfect with it.
-            AddFunction(new ScaledNetworkValue(this, "211", 20d, "Radio Channel Display", "Radio Channel output for display", "Current channel", "use potentiometer with initial 0, min0, max 20, step 1", BindingValueUnits.Numeric, 0d, "%.4f"));          
+            AddFunction(new ScaledNetworkValue(this, "221", 20d, "Radio Channel Display", "Radio Channel output for display", "Current channel", "use potentiometer with initial 0, min0, max 20, step 1", BindingValueUnits.Numeric, 0d, "%.4f"));          
             #endregion
 
             #region DC & AC buses & giro devices

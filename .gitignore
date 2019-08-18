@@ -15,3 +15,9 @@ Helios *.zip
 Helios *.zip
 Helios*.msi
 setup.exe
+/.vs/Helios/v16/Server/sqlite3/db.lock
+/.vs/Helios/v16/Server/sqlite3/storage.ide
+/.vs/Helios/v16/Server/sqlite3/storage.ide-shm
+/.vs/Helios/v16/Server/sqlite3/storage.ide-wal
+/UpgradeLog2.htm
+/Helios/Helios.csproj.user
